@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KiteKit Scroll Stress Fixture</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: linear-gradient(180deg, #fbf8f1 0%, #f0efe9 48%, #f8f4eb 100%);
+      --panel: rgba(255, 255, 255, 0.9);
+      --border: rgba(25, 35, 45, 0.12);
+      --text: #1b2430;
+      --muted: #5d6773;
+      --accent: #0d6b6f;
+      --accent-soft: rgba(13, 107, 111, 0.12);
+      --shadow: 0 18px 44px rgba(27, 36, 48, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "DejaVu Sans", sans-serif;
+      color: var(--text);
+      background: var(--page-bg);
+      line-height: 1.5;
+    }
+
+    .hero {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 1.25rem 1.5rem;
+      backdrop-filter: blur(16px);
+      background: rgba(251, 248, 241, 0.82);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .hero p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    main {
+      width: min(1080px, calc(100% - 2rem));
+      margin: 1.5rem auto 5rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 1.25rem;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .chip {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.92rem;
+    }
+
+    .nested-scroll {
+      max-height: 20rem;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      padding: 0.75rem;
+    }
+
+    .nested-scroll .row {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr;
+      gap: 0.85rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(25, 35, 45, 0.08);
+    }
+
+    .nested-scroll .row:last-child {
+      border-bottom: 0;
+    }
+
+    .metric {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+
+    .stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .story {
+      min-height: 28rem;
+      display: grid;
+      align-content: start;
+      gap: 0.75rem;
+    }
+
+    .story h3 {
+      margin-bottom: 0;
+    }
+
+    .story p {
+      margin: 0;
+      max-width: 70ch;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>KiteKit Scroll Stress Fixture</h1>
+    <p>Use this page to compare full-page scrolling with a sticky header, then test the nested overflow area further down for trackpad and wheel input consistency.</p>
+  </header>
+  <main>
+    <section class="panel">
+      <h2>Quick Checks</h2>
+      <p>Scroll from top to bottom several times. Pause over the inner list and continue scrolling to see whether input handoff feels smooth or hesitant.</p>
+      <div class="chips">
+        <span class="chip">Tall document</span>
+        <span class="chip">Sticky header</span>
+        <span class="chip">Nested overflow</span>
+        <span class="chip">Layered backgrounds</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Nested Scroll Region</h2>
+      <div class="nested-scroll">
+        <div class="row"><div class="metric">00:05</div><div>Initial pass through the nested scroller. Notice whether the inner region keeps pace with small wheel ticks.</div></div>
+        <div class="row"><div class="metric">00:14</div><div>Alternate fast and slow strokes to see whether momentum feels predictable.</div></div>
+        <div class="row"><div class="metric">00:21</div><div>Reverse direction mid-scroll and watch for hitching at the edge of the container.</div></div>
+        <div class="row"><div class="metric">00:36</div><div>Use short, repeated wheel input and confirm the inner region responds immediately.</div></div>
+        <div class="row"><div class="metric">00:47</div><div>Keep the pointer inside the panel and scroll until the container reaches its end.</div></div>
+        <div class="row"><div class="metric">00:58</div><div>Continue scrolling after the inner list ends and verify that control returns to the page cleanly.</div></div>
+        <div class="row"><div class="metric">01:10</div><div>Trackpad momentum should not stall when the content area is partially clipped.</div></div>
+        <div class="row"><div class="metric">01:22</div><div>Diagonal trackpad gestures should not misroute input or feel rubber-banded.</div></div>
+        <div class="row"><div class="metric">01:35</div><div>Scroll back upward through the container and look for frame pacing changes.</div></div>
+        <div class="row"><div class="metric">01:49</div><div>Repeat the same motion with the pointer just outside the nested region.</div></div>
+        <div class="row"><div class="metric">02:02</div><div>High-density text blocks below help reveal compositing or paint jitter.</div></div>
+        <div class="row"><div class="metric">02:17</div><div>One more pass through the nested region before continuing through the long page below.</div></div>
+      </div>
+    </section>
+
+    <section class="stack">
+      <article class="panel story">
+        <h3>Section 1</h3>
+        <p>The first content block establishes a stable baseline. The card uses a translucent surface over a gradient background so small paint stalls are easier to spot during long wheel runs.</p>
+        <p>Keep scrolling while reading. Minor text and box-shadow movement tends to expose uneven frame cadence quickly.</p>
+      </article>
+      <article class="panel story">
+        <h3>Section 2</h3>
+        <p>This section stretches the page further so momentum can build. Consistent deceleration should feel natural rather than stepping in discrete jumps.</p>
+        <p>If the page seems to fight the input device, repeat the same movement in the nested scroller above and compare the handoff behavior.</p>
+      </article>
+      <article class="panel story">
+        <h3>Section 3</h3>
+        <p>Web views often feel worst when a sticky element remains fixed while the rest of the page moves beneath it. That is why the header stays pinned throughout this fixture.</p>
+        <p>Watch the border beneath the header. Jitter there is often easier to notice than in the larger body content.</p>
+      </article>
+      <article class="panel story">
+        <h3>Section 4</h3>
+        <p>This card intentionally keeps the visual language simple. The goal is not synthetic benchmarking, only a repeatable human check for scroll and compositing quality.</p>
+        <p>Try both small wheel ticks and a continuous drag on a touchpad if your hardware supports it.</p>
+      </article>
+      <article class="panel story">
+        <h3>Section 5</h3>
+        <p>Long-form reading layouts highlight whether the browser can hold a smooth pace through many consecutive paints. Subtle hitches become obvious after sustained movement.</p>
+        <p>If the app falls back to X11 inside Wayland, this part of the page is where many users will notice it first.</p>
+      </article>
+      <article class="panel story">
+        <h3>Section 6</h3>
+        <p>Near the bottom of the fixture the document remains intentionally repetitive. That makes it easier to focus on feel rather than on changing content.</p>
+        <p>When you reach the end, reverse direction and run back to the top to see whether the experience remains consistent.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
